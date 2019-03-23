@@ -399,10 +399,12 @@ def draw_centered_surface(screen, surface, y):
 def main():
     pygame.init()
     pygame.display.set_caption("Tetris con PyGame")
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    #screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN, 32)
     run = True
     paused = False
     game_over = False
+    pantalla_completa = True
     # Create background.
     background = pygame.Surface(screen.get_size())
     bgcolor = (0, 0, 0)
@@ -421,6 +423,8 @@ def main():
         "Siguiente figura:", True, (255, 255, 255), bgcolor)
     score_msg_text = font.render(
         "Puntaje:", True, (255, 255, 255), bgcolor)
+    restart_msg_text = font.render(
+        "Para reiniciar presiona r", True, (255, 255, 255), bgcolor)
     game_over_text = font.render(
         "¡Juego terminado!", True, (255, 220, 0), bgcolor)
     
@@ -444,9 +448,9 @@ def main():
                         blocks.stop_moving_current_block()
                     elif event.key == pygame.K_UP:
                         blocks.rotate_current_block()
-                if event.key == pygame.K_p:
-                    paused = not paused
-            
+                # if event.key == pygame.K_p:
+                #     paused = not paused
+                
             # Stop moving blocks if the game is over or paused.
             if game_over or paused:
                 continue
@@ -454,6 +458,21 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key in MOVEMENT_KEYS:
                     blocks.start_moving_current_block(event.key)
+
+
+            # Cambiar modo de pantalla
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_m:
+                    pantalla_completa = not pantalla_completa
+                    if pantalla_completa:
+                        screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN, 32)
+                    else:
+                        screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT),0 , 32)
+
+            # Reiniciar Juego
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    main()
             
             try:
                 if event.type == EVENT_UPDATE_CURRENT_BLOCK:
@@ -471,6 +490,7 @@ def main():
         draw_centered_surface(screen, next_block_text, 50)
         draw_centered_surface(screen, blocks.next_block.image, 100)
         draw_centered_surface(screen, score_msg_text, 240)
+        #draw_centered_surface(screen, restart_msg_text, 300)
         score_text = font.render(
             str(blocks.score), True, (255, 255, 255), bgcolor)
         draw_centered_surface(screen, score_text, 270)
