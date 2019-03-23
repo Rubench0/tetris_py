@@ -1,4 +1,4 @@
-# tetris_py
+# Tetris_py
 Juego de tetris desarrollado en python
 
 El código inicial lo tome de este blog: 
